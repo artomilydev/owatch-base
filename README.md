@@ -8,9 +8,9 @@
   ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript)
   ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)
 
-  **Transform your viewing time into cryptocurrency rewards**
+**Transform your viewing time into cryptocurrency rewards**
 
-  [Documentation](https://owatch-1.gitbook.io/owatch-docs) • [Live Demo](#) • [Report Bug](#) • [Request Feature](#)
+[Documentation](https://owatch-1.gitbook.io/owatch-docs) • [Live Demo](#) • [Report Bug](#) • [Request Feature](#)
 
 </div>
 
@@ -34,23 +34,27 @@ O'Watch.ID is a revolutionary Web3 platform that rewards users with OWATCH token
 ## 🚀 Tech Stack
 
 ### Frontend Framework
+
 - **Next.js 14** - React framework with App Router
 - **React 18.3** - UI library
 - **TypeScript** - Type-safe development
 
 ### Blockchain Integration
+
 - **wagmi 2.18** - React hooks for Ethereum
 - **viem 2.38** - TypeScript interface for Ethereum
 - **RainbowKit 2.2** - Beautiful wallet connection UI
 - **Base & Base Sepolia** - Layer 2 blockchain networks
 
 ### Styling
+
 - **Tailwind CSS 3.4** - Utility-first CSS framework
 - **Radix UI** - Unstyled, accessible components
 - **Lucide React** - Beautiful icon library
 - **class-variance-authority** - Component variant management
 
 ### State Management
+
 - **TanStack Query** - Powerful data synchronization
 
 ---
@@ -113,12 +117,14 @@ owatch-base/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/artomily/owatch-base.git
    cd owatch-base
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -128,13 +134,15 @@ owatch-base/
    ```
 
 3. **Set up environment variables**
-   
+
    Create a `.env.local` file in the root directory:
+
    ```env
    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
    ```
 
 4. **Run the development server**
+
    ```bash
    npm run dev
    # or
@@ -144,7 +152,7 @@ owatch-base/
    ```
 
 5. **Open your browser**
-   
+
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ---
@@ -176,6 +184,7 @@ owatch-base/
 ## 🎨 Features Breakdown
 
 ### Landing Page
+
 - Modern gradient background with animated effects
 - Responsive navigation bar with wallet integration
 - Hero section with call-to-action
@@ -185,6 +194,7 @@ owatch-base/
 - Footer with documentation links
 
 ### Dashboard
+
 - Responsive sidebar with wallet information
 - Video content grid with filtering
 - User profile with earnings history
@@ -193,6 +203,7 @@ owatch-base/
 - Mobile-responsive navigation
 
 ### Wallet Integration
+
 - Multi-wallet support via RainbowKit
 - Automatic connection state management
 - Network switching (Base & Base Sepolia)
@@ -228,12 +239,12 @@ Contributions are what make the open-source community amazing! Any contributions
 
 ## 📝 Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start development server |
+| `npm run build` | Build for production     |
+| `npm run start` | Start production server  |
+| `npm run lint`  | Run ESLint               |
 
 ---
 
@@ -255,6 +266,7 @@ export const config = getDefaultConfig({
 ### Tailwind CSS
 
 Custom theme configuration in `tailwind.config.js` with:
+
 - Custom color palette
 - Dark mode support
 - Extended utilities for animations

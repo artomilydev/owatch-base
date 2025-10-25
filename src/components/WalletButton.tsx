@@ -6,17 +6,23 @@ import { useEffect, useState } from "react";
 
 export function WalletButton() {
   const { address, isConnected } = useAccount();
-  const [owatchBalance, setOwatchBalance] = useState<number>(0);
+  const [points, setPoints] = useState<number>(0);
+  const [owtBalance, setOwtBalance] = useState<number>(0);
 
-  // Load OWATCH balance from localStorage or backend
+  // Load points and OWT balance from localStorage
   useEffect(() => {
     if (isConnected && address) {
-      // For now, load from localStorage
-      // Later we can fetch from backend using wallet address
-      const savedBalance = parseInt(
-        localStorage.getItem("owatch_balance") || "0"
+      // Load points
+      const savedPoints = parseInt(
+        localStorage.getItem(`owatch_points_${address}`) || "0"
       );
-      setOwatchBalance(savedBalance);
+      setPoints(savedPoints);
+
+      // Load OWT tokens
+      const savedOwt = parseFloat(
+        localStorage.getItem(`owatch_owt_${address}`) || "0"
+      );
+      setOwtBalance(savedOwt);
     }
   }, [isConnected, address]);
 
@@ -80,11 +86,19 @@ export function WalletButton() {
 
               return (
                 <div className="flex items-center space-x-4">
-                  {/* Balance Display */}
+                  {/* Points Display */}
+                  <div className="flex items-center space-x-2 bg-gray-800 px-3 py-2 rounded-lg">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <span className="text-white font-semibold text-sm">
+                      {points} Points
+                    </span>
+                  </div>
+
+                  {/* OWT Balance Display */}
                   <div className="flex items-center space-x-2 bg-gray-800 px-3 py-2 rounded-lg">
                     <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                     <span className="text-white font-semibold text-sm">
-                      {owatchBalance} OWATCH
+                      {owtBalance.toFixed(2)} OWT
                     </span>
                   </div>
 

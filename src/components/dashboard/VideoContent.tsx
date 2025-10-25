@@ -16,7 +16,7 @@ interface Video {
   id: number;
   title: string;
   duration: string;
-  reward: number;
+  reward: number; // Now represents points instead of tokens
   thumbnail: string;
   category: string;
   watched: boolean;
@@ -24,13 +24,13 @@ interface Video {
   description: string;
 }
 
-// Dummy videos - nanti bisa diganti dengan data real dari API/Solana
+// Dummy videos - rewards are now points instead of direct tokens
 const dummyVideos: Video[] = [
   {
     id: 1,
     title: "Introduction to Web3 & Blockchain",
     duration: "5:30",
-    reward: 10,
+    reward: 50, // 50 points
     thumbnail: "/api/placeholder/400/225",
     category: "Education",
     watched: false,
@@ -39,20 +39,20 @@ const dummyVideos: Video[] = [
   },
   {
     id: 2,
-    title: "Solana Blockchain Deep Dive",
+    title: "Base Chain Deep Dive",
     duration: "8:15",
-    reward: 15,
+    reward: 75, // 75 points
     thumbnail: "/api/placeholder/400/225",
     category: "Technology",
     watched: false,
     progress: 0,
-    description: "Explore Solana's high-performance blockchain architecture",
+    description: "Explore Base Chain's Layer 2 architecture and features",
   },
   {
     id: 3,
     title: "DeFi Fundamentals",
     duration: "6:45",
-    reward: 12,
+    reward: 60, // 60 points
     thumbnail: "/api/placeholder/400/225",
     category: "Finance",
     watched: false,
@@ -63,7 +63,7 @@ const dummyVideos: Video[] = [
     id: 4,
     title: "NFT Marketplace Guide",
     duration: "7:20",
-    reward: 14,
+    reward: 70, // 70 points
     thumbnail: "/api/placeholder/400/225",
     category: "NFT",
     watched: false,
@@ -74,7 +74,7 @@ const dummyVideos: Video[] = [
     id: 5,
     title: "Crypto Trading Strategies",
     duration: "9:10",
-    reward: 18,
+    reward: 90, // 90 points
     thumbnail: "/api/placeholder/400/225",
     category: "Trading",
     watched: false,
@@ -103,18 +103,18 @@ export function VideoContent(): JSX.Element {
   const [watchTime, setWatchTime] = useState<number>(0);
   const [showClaimModal, setShowClaimModal] = useState<boolean>(false);
   const [claimedRewards, setClaimedRewards] = useState<number[]>([]);
-  const [balance, setBalance] = useState<number>(0);
+  const [points, setPoints] = useState<number>(0); // Changed from balance to points
   const [filter, setFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // Load balance from localStorage on mount
+  // Load points from localStorage on mount
   useEffect(() => {
     if (isConnected && address) {
-      // Load balance from localStorage using wallet address as key
-      const savedBalance = parseInt(
-        localStorage.getItem(`owatch_balance_${address}`) || "0"
+      // Load points from localStorage using wallet address as key
+      const savedPoints = parseInt(
+        localStorage.getItem(`owatch_points_${address}`) || "0"
       );
-      setBalance(savedBalance);
+      setPoints(savedPoints);
     }
   }, [isConnected, address]);
 
@@ -184,10 +184,10 @@ export function VideoContent(): JSX.Element {
     setClaimedRewards((prev) => [...prev, videoId]);
     setShowClaimModal(false);
 
-    // Update balance using wallet address as key
-    const newBalance = balance + reward;
-    setBalance(newBalance);
-    localStorage.setItem(`owatch_balance_${address}`, newBalance.toString());
+    // Update points using wallet address as key
+    const newPoints = points + reward;
+    setPoints(newPoints);
+    localStorage.setItem(`owatch_points_${address}`, newPoints.toString());
 
     // Update video status
     setVideos((prev) =>
@@ -197,7 +197,7 @@ export function VideoContent(): JSX.Element {
     );
 
     // Show success message
-    alert(`🎉 Successfully claimed ${reward} OWATCH tokens!`);
+    alert(`🎉 Successfully claimed ${reward} points!`);
   };
 
   const formatTime = (seconds: number): string => {
@@ -233,16 +233,16 @@ export function VideoContent(): JSX.Element {
           </h1>
           <p className="dark:text-slate-300 text-gray-600">
             {isConnected
-              ? "Watch videos and earn OWATCH tokens"
+              ? "Watch videos and earn points"
               : "Connect your wallet to start earning"}
           </p>
         </div>
         <div className="flex items-center space-x-4">
           {isConnected && (
             <div className="flex items-center space-x-2 dark:bg-white/10 dark:backdrop-blur-md dark:border dark:border-white/20 bg-gray-100 border border-gray-200 px-4 py-2 rounded-lg">
-              <DollarSign className="w-5 h-5 text-green-400" />
+              <DollarSign className="w-5 h-5 text-purple-400" />
               <span className="dark:text-white text-gray-900 font-semibold">
-                {balance} OWATCH
+                {points} Points
               </span>
             </div>
           )}

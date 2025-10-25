@@ -21,6 +21,12 @@ export function Sidebar(): JSX.Element {
       icon: Play,
       href: "/dashboard/videos",
     },
+    {
+      id: "convert",
+      label: "Convert Points",
+      icon: Coins,
+      href: "/dashboard/convert",
+    },
     { id: "profile", label: "Profile", icon: User, href: "/dashboard/profile" },
     {
       id: "settings",

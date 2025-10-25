@@ -28,6 +28,11 @@ const navigation = [
     icon: Play,
   },
   {
+    name: "Convert Points",
+    href: "/dashboard/convert",
+    icon: Coins,
+  },
+  {
     name: "Profile",
     href: "/dashboard/profile",
     icon: User,

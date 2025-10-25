@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useAccount } from "wagmi";
 import { useTheme } from "../../context/ThemeContext";
 import {
   Play,
@@ -95,7 +95,8 @@ const dummyVideos: Video[] = [
 ];
 
 export function VideoContent(): JSX.Element {
-  const { publicKey, connected } = useWallet();
+  const { address, isConnected } = useAccount();
+  const { theme } = useTheme();
   const [videos, setVideos] = useState<Video[]>(dummyVideos);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -108,15 +109,14 @@ export function VideoContent(): JSX.Element {
 
   // Load balance from localStorage on mount
   useEffect(() => {
-    if (connected && publicKey) {
+    if (isConnected && address) {
       // Load balance from localStorage using wallet address as key
-      const walletAddress = publicKey.toString();
       const savedBalance = parseInt(
-        localStorage.getItem(`owatch_balance_${walletAddress}`) || "0"
+        localStorage.getItem(`owatch_balance_${address}`) || "0"
       );
       setBalance(savedBalance);
     }
-  }, [connected, publicKey]);
+  }, [isConnected, address]);
 
   // Timer untuk tracking watch time
   useEffect(() => {
@@ -175,7 +175,7 @@ export function VideoContent(): JSX.Element {
   };
 
   const handleClaimReward = (videoId: number, reward: number) => {
-    if (!connected || !publicKey) {
+    if (!isConnected || !address) {
       alert("Please connect your wallet first!");
       return;
     }
@@ -185,13 +185,9 @@ export function VideoContent(): JSX.Element {
     setShowClaimModal(false);
 
     // Update balance using wallet address as key
-    const walletAddress = publicKey.toString();
     const newBalance = balance + reward;
     setBalance(newBalance);
-    localStorage.setItem(
-      `owatch_balance_${walletAddress}`,
-      newBalance.toString()
-    );
+    localStorage.setItem(`owatch_balance_${address}`, newBalance.toString());
 
     // Update video status
     setVideos((prev) =>
@@ -236,13 +232,13 @@ export function VideoContent(): JSX.Element {
             Watch & Earn
           </h1>
           <p className="dark:text-slate-300 text-gray-600">
-            {connected
+            {isConnected
               ? "Watch videos and earn OWATCH tokens"
-              : "Connect your Phantom wallet to start earning"}
+              : "Connect your wallet to start earning"}
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          {connected && (
+          {isConnected && (
             <div className="flex items-center space-x-2 dark:bg-white/10 dark:backdrop-blur-md dark:border dark:border-white/20 bg-gray-100 border border-gray-200 px-4 py-2 rounded-lg">
               <DollarSign className="w-5 h-5 text-green-400" />
               <span className="dark:text-white text-gray-900 font-semibold">
@@ -250,7 +246,7 @@ export function VideoContent(): JSX.Element {
               </span>
             </div>
           )}
-          {!connected && (
+          {!isConnected && (
             <div className="bg-yellow-500 dark:text-yellow-900 text-white px-4 py-2 rounded-lg text-sm font-medium">
               ⚠️ Wallet not connected
             </div>

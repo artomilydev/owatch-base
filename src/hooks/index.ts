@@ -1,13 +1,9 @@
-// Custom React hooks for the O'Watch application
+// Custom React hooks for the O'Watch application// Custom React hooks for the O'Watch application// Custom React hooks for the O'Watch application// Custom React hooks for the O'Watch application// Custom React hooks for the O'Watch application
 
-import { useState, useEffect, useCallback } from 'react';
-
-/**
- * Hook for managing wallet connection state
- */
-export function useWallet() {
-  const [isConnected, setIsConnected] = useState(false);
-  const [address, setAddress] = useState<string>('');
+export { useWalletRedirect } from './useWalletRedirect';
+export { useWalletRedirect } from './useWalletRedirect';
+export { useWalletRedirect } from './useWalletRedirect';
+export { useWalletRedirect } from './useWalletRedirect';export { useWalletRedirect } from './useWalletRedirect';
   const [balance, setBalance] = useState<number>(0);
   const [isConnecting, setIsConnecting] = useState(false);
 

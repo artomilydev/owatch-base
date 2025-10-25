@@ -3,28 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui";
 import { Play, Menu, X } from "lucide-react";
-import dynamic from "next/dynamic";
-
-// Dynamically import wallet button to avoid SSR issues
-const WalletMultiButton = dynamic(
-  () =>
-    import("@solana/wallet-adapter-react-ui").then((mod) => ({
-      default: mod.WalletMultiButton,
-    })),
-  {
-    ssr: false,
-    loading: () => (
-      <Button
-        disabled
-        size="sm"
-        className="bg-purple-600 text-white px-4 py-2 text-sm"
-      >
-        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-        Loading...
-      </Button>
-    ),
-  }
-);
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 interface LandingNavbarProps {
   // Reserved for future use
@@ -74,16 +53,10 @@ export function LandingNavbar({}: LandingNavbarProps) {
 
           {/* Connect Wallet Button */}
           <div className="hidden md:block">
-            <WalletMultiButton
-              className="!bg-gradient-to-r !from-purple-500 !to-pink-500 hover:!from-purple-600 hover:!to-pink-600 !text-white !px-4 !py-2 !text-sm !rounded-lg !font-medium !transition-all !border-0"
-              style={{
-                background: "linear-gradient(135deg, #8b5cf6, #ec4899)",
-                border: "none",
-                borderRadius: "8px",
-                padding: "8px 16px",
-                fontSize: "14px",
-                fontWeight: "500",
-              }}
+            <ConnectButton
+              chainStatus="none"
+              accountStatus="address"
+              showBalance={false}
             />
           </div>
 
@@ -114,17 +87,10 @@ export function LandingNavbar({}: LandingNavbarProps) {
                 </button>
               ))}
               <div className="pt-2">
-                <WalletMultiButton
-                  className="!bg-gradient-to-r !from-purple-500 !to-pink-500 hover:!from-purple-600 hover:!to-pink-600 !text-white !px-4 !py-2 !text-sm !rounded-lg !font-medium !transition-all !border-0 !w-full"
-                  style={{
-                    background: "linear-gradient(135deg, #8b5cf6, #ec4899)",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "8px 16px",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    width: "100%",
-                  }}
+                <ConnectButton
+                  chainStatus="none"
+                  accountStatus="address"
+                  showBalance={false}
                 />
               </div>
             </div>

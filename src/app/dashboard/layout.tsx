@@ -1,9 +1,13 @@
 "use client";
 
+import { useWalletRedirect } from "@/hooks/useWalletRedirect";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  // This hook handles auto-redirect when wallet disconnects
+  useWalletRedirect();
+
   return (
     <SidebarProvider>
       {/* Dark mode background */}

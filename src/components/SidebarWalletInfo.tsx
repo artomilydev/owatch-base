@@ -1,12 +1,13 @@
 "use client";
 
-import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount, useDisconnect } from "wagmi";
 import { useState, useEffect, useRef } from "react";
 import { MoreVertical, LogOut, Copy } from "lucide-react";
 
 export function SidebarWalletInfo() {
-  const { publicKey, connected, disconnect } = useWallet();
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -30,8 +31,8 @@ export function SidebarWalletInfo() {
   };
 
   const copyToClipboard = async () => {
-    if (publicKey) {
-      await navigator.clipboard.writeText(publicKey.toString());
+    if (address) {
+      await navigator.clipboard.writeText(address);
       setShowMenu(false);
       // You could add a toast notification here
     }
@@ -42,20 +43,18 @@ export function SidebarWalletInfo() {
     setShowMenu(false);
   };
 
-  if (!connected) {
+  if (!isConnected) {
     return (
-      <WalletMultiButton
-        className="!w-full !bg-gradient-to-r !from-purple-500 !to-pink-500 hover:!from-purple-600 hover:!to-pink-600 !text-white !rounded-lg !px-4 !py-3 !font-medium !transition-all !duration-300 !border-0"
-        style={{
-          background: "linear-gradient(to right, #8b5cf6, #ec4899)",
-          border: "none",
-          borderRadius: "8px",
-          padding: "12px 16px",
-          fontSize: "14px",
-          fontWeight: "500",
-          width: "100%",
-        }}
-      />
+      <ConnectButton.Custom>
+        {({ openConnectModal }) => (
+          <button
+            onClick={openConnectModal}
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg px-4 py-3 font-medium transition-all duration-300"
+          >
+            Connect Wallet
+          </button>
+        )}
+      </ConnectButton.Custom>
     );
   }
 
@@ -67,9 +66,7 @@ export function SidebarWalletInfo() {
           <div>
             <p className="text-xs dark:text-gray-400 text-gray-500">Wallet</p>
             <p className="text-sm font-medium dark:text-white text-gray-900">
-              {publicKey
-                ? formatWalletAddress(publicKey.toString())
-                : "Connected"}
+              {address ? formatWalletAddress(address) : "Connected"}
             </p>
           </div>
         </div>

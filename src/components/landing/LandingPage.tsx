@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useWallet } from "@solana/wallet-adapter-react";
-import dynamic from "next/dynamic";
+import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useWalletRedirect } from "@/hooks/useWalletRedirect";
 import {
   Button,
   Card,
@@ -25,27 +26,6 @@ import {
 } from "lucide-react";
 import { LandingNavbar } from "./LandingNavbar";
 
-// Dynamically import wallet button to avoid SSR issues
-const WalletMultiButton = dynamic(
-  () =>
-    import("@solana/wallet-adapter-react-ui").then((mod) => ({
-      default: mod.WalletMultiButton,
-    })),
-  {
-    ssr: false,
-    loading: () => (
-      <Button
-        disabled
-        size="lg"
-        className="bg-purple-600 text-white px-8 py-4 text-lg"
-      >
-        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-        Loading...
-      </Button>
-    ),
-  }
-);
-
 interface LandingPageProps {
   onWalletConnect?: () => void;
 }
@@ -53,30 +33,26 @@ interface LandingPageProps {
 export function LandingPage({
   onWalletConnect,
 }: LandingPageProps): JSX.Element {
-  const { connected, connecting } = useWallet();
+  const { isConnected, isConnecting } = useAccount();
   const router = useRouter();
-  const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  const [isConnectingState, setIsConnectingState] = useState<boolean>(false);
+
+  // This hook handles auto-redirect when wallet connects/disconnects
+  useWalletRedirect();
 
   const handleWalletConnect = async (): Promise<void> => {
-    if (connected) {
+    if (isConnected) {
       // Already connected, redirect to dashboard
       router.push("/dashboard/videos");
       return;
     }
 
-    setIsConnecting(true);
-    // Wallet connection is handled by WalletMultiButton
+    setIsConnectingState(true);
+    // Wallet connection is handled by ConnectButton
     // Just wait a bit for connection to complete
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsConnecting(false);
+    setIsConnectingState(false);
   };
-
-  // Auto redirect when wallet is connected
-  useEffect(() => {
-    if (connected) {
-      router.push("/dashboard/videos");
-    }
-  }, [connected, router]);
 
   const features = [
     {
@@ -169,35 +145,55 @@ export function LandingPage({
             enjoying premium content.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <WalletMultiButton
-              className="!bg-gradient-to-r !from-purple-500 !to-pink-500 hover:!from-purple-600 hover:!to-pink-600 !text-white !px-8 !py-4 !text-lg !rounded-xl !font-semibold !transition-all !shadow-xl hover:!shadow-purple-500/25 !border-0"
-              style={{
-                background: "linear-gradient(135deg, #8b5cf6, #ec4899)",
-                border: "none",
-                borderRadius: "12px",
-                padding: "16px 32px",
-                fontSize: "18px",
-                fontWeight: "600",
-                boxShadow: "0 10px 25px rgba(139, 92, 246, 0.3)",
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openAccountModal,
+                openChainModal,
+                openConnectModal,
+                mounted,
+              }) => {
+                return (
+                  <div
+                    {...(!mounted && {
+                      "aria-hidden": true,
+                      style: {
+                        opacity: 0,
+                        pointerEvents: "none",
+                        userSelect: "none",
+                      },
+                    })}
+                  >
+                    {(() => {
+                      if (!mounted || !account || !chain) {
+                        return (
+                          <button
+                            onClick={openConnectModal}
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 text-lg rounded-xl font-semibold transition-all shadow-xl hover:shadow-purple-500/25 flex items-center"
+                            type="button"
+                          >
+                            <Wallet className="mr-2 h-5 w-5" />
+                            Connect Wallet to Start
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <button
+                          onClick={() => router.push("/dashboard/videos")}
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 text-lg rounded-xl font-semibold transition-all shadow-xl hover:shadow-purple-500/25 flex items-center"
+                          type="button"
+                        >
+                          <Wallet className="mr-2 h-5 w-5" />
+                          Go to Dashboard
+                        </button>
+                      );
+                    })()}
+                  </div>
+                );
               }}
-            >
-              {connecting ? (
-                <div className="flex items-center space-x-2">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  <span>Connecting...</span>
-                </div>
-              ) : connected ? (
-                <>
-                  <Wallet className="mr-2 h-5 w-5" />
-                  Go to Dashboard
-                </>
-              ) : (
-                <>
-                  <Wallet className="mr-2 h-5 w-5" />
-                  Connect Wallet to Start
-                </>
-              )}
-            </WalletMultiButton>
+            </ConnectButton.Custom>
             <Button
               variant="outline"
               size="lg"

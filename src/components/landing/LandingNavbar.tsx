@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
-import { Play, Menu, X } from "lucide-react";
+import { Play, Menu, X, Wallet } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 interface LandingNavbarProps {
@@ -11,6 +12,7 @@ interface LandingNavbarProps {
 
 export function LandingNavbar({}: LandingNavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -51,13 +53,69 @@ export function LandingNavbar({}: LandingNavbarProps) {
             ))}
           </div>
 
-          {/* Connect Wallet Button */}
+          {/* Connect Wallet Button - Desktop */}
           <div className="hidden md:block">
-            <ConnectButton
-              chainStatus="none"
-              accountStatus="address"
-              showBalance={false}
-            />
+            <ConnectButton.Custom>
+              {({
+                account,
+                chain,
+                openAccountModal,
+                openChainModal,
+                openConnectModal,
+                mounted,
+              }) => {
+                return (
+                  <div
+                    {...(!mounted && {
+                      "aria-hidden": true,
+                      style: {
+                        opacity: 0,
+                        pointerEvents: "none",
+                        userSelect: "none",
+                      },
+                    })}
+                  >
+                    {(() => {
+                      if (!mounted || !account || !chain) {
+                        return (
+                          <button
+                            onClick={openConnectModal}
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 text-sm rounded-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/25 flex items-center"
+                            type="button"
+                          >
+                            <Wallet className="mr-2 h-4 w-4" />
+                            Connect Wallet
+                          </button>
+                        );
+                      }
+
+                      if (chain.unsupported) {
+                        return (
+                          <button
+                            onClick={openChainModal}
+                            className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-2 text-sm rounded-lg font-semibold transition-all shadow-lg flex items-center"
+                            type="button"
+                          >
+                            Wrong network
+                          </button>
+                        );
+                      }
+
+                      return (
+                        <button
+                          onClick={openAccountModal}
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 text-sm rounded-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/25 flex items-center"
+                          type="button"
+                        >
+                          <Wallet className="mr-2 h-4 w-4" />
+                          {account.displayName}
+                        </button>
+                      );
+                    })()}
+                  </div>
+                );
+              }}
+            </ConnectButton.Custom>
           </div>
 
           {/* Mobile Menu Button */}
@@ -87,11 +145,67 @@ export function LandingNavbar({}: LandingNavbarProps) {
                 </button>
               ))}
               <div className="pt-2">
-                <ConnectButton
-                  chainStatus="none"
-                  accountStatus="address"
-                  showBalance={false}
-                />
+                <ConnectButton.Custom>
+                  {({
+                    account,
+                    chain,
+                    openAccountModal,
+                    openChainModal,
+                    openConnectModal,
+                    mounted,
+                  }) => {
+                    return (
+                      <div
+                        {...(!mounted && {
+                          "aria-hidden": true,
+                          style: {
+                            opacity: 0,
+                            pointerEvents: "none",
+                            userSelect: "none",
+                          },
+                        })}
+                      >
+                        {(() => {
+                          if (!mounted || !account || !chain) {
+                            return (
+                              <button
+                                onClick={openConnectModal}
+                                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 text-sm rounded-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/25 flex items-center justify-center"
+                                type="button"
+                              >
+                                <Wallet className="mr-2 h-4 w-4" />
+                                Connect Wallet
+                              </button>
+                            );
+                          }
+
+                          if (chain.unsupported) {
+                            return (
+                              <button
+                                onClick={openChainModal}
+                                className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-2 text-sm rounded-lg font-semibold transition-all shadow-lg flex items-center justify-center"
+                                type="button"
+                              >
+                                Wrong network
+                              </button>
+                            );
+                          }
+
+                          return (
+                            <button
+                              onClick={openAccountModal}
+                              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-4 py-2 text-sm rounded-lg font-semibold transition-all shadow-lg hover:shadow-purple-500/25 flex items-center justify-center"
+                              type="button"
+                            >
+                              <Wallet className="mr-2 h-4 w-4" />
+                              {account.displayName}
+                            </button>
+                          );
+                        })()}
+                      </div>
+                    );
+                  }}
+                </ConnectButton.Custom>
               </div>
             </div>
           </div>

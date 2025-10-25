@@ -1,18 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useWalletRedirect } from "@/hooks/useWalletRedirect";
 import {
-  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  Badge,
 } from "@/components/ui";
 import {
   Play,
@@ -30,29 +26,11 @@ interface LandingPageProps {
   onWalletConnect?: () => void;
 }
 
-export function LandingPage({
-  onWalletConnect,
-}: LandingPageProps): JSX.Element {
-  const { isConnected, isConnecting } = useAccount();
+export function LandingPage({}: LandingPageProps): JSX.Element {
   const router = useRouter();
-  const [isConnectingState, setIsConnectingState] = useState<boolean>(false);
 
   // This hook handles auto-redirect when wallet connects/disconnects
   useWalletRedirect();
-
-  const handleWalletConnect = async (): Promise<void> => {
-    if (isConnected) {
-      // Already connected, redirect to dashboard
-      router.push("/dashboard/videos");
-      return;
-    }
-
-    setIsConnectingState(true);
-    // Wallet connection is handled by ConnectButton
-    // Just wait a bit for connection to complete
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsConnectingState(false);
-  };
 
   const features = [
     {
@@ -144,18 +122,12 @@ export function LandingPage({
             O'Watch.ID. Join thousands of users earning OWATCH tokens while
             enjoying premium content.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full sm:w-auto px-4 sm:px-0">
             <ConnectButton.Custom>
-              {({
-                account,
-                chain,
-                openAccountModal,
-                openChainModal,
-                openConnectModal,
-                mounted,
-              }) => {
+              {({ account, chain, openConnectModal, mounted }) => {
                 return (
                   <div
+                    className="w-full sm:w-auto"
                     {...(!mounted && {
                       "aria-hidden": true,
                       style: {
@@ -170,7 +142,7 @@ export function LandingPage({
                         return (
                           <button
                             onClick={openConnectModal}
-                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 text-lg rounded-xl font-semibold transition-all shadow-xl hover:shadow-purple-500/25 flex items-center"
+                            className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-xl font-semibold transition-all shadow-xl hover:shadow-purple-500/25 flex items-center justify-center"
                             type="button"
                           >
                             <Wallet className="mr-2 h-5 w-5" />
@@ -182,7 +154,7 @@ export function LandingPage({
                       return (
                         <button
                           onClick={() => router.push("/dashboard/videos")}
-                          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-4 text-lg rounded-xl font-semibold transition-all shadow-xl hover:shadow-purple-500/25 flex items-center"
+                          className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-xl font-semibold transition-all shadow-xl hover:shadow-purple-500/25 flex items-center justify-center"
                           type="button"
                         >
                           <Wallet className="mr-2 h-5 w-5" />
@@ -194,13 +166,14 @@ export function LandingPage({
                 );
               }}
             </ConnectButton.Custom>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-2 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white px-8 py-4 text-lg bg-transparent rounded-xl font-semibold backdrop-blur-sm"
+            <a
+              href="https://owatch-1.gitbook.io/owatch-docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto border-2 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg bg-transparent rounded-xl font-semibold backdrop-blur-sm transition-all duration-200 flex items-center justify-center"
             >
-              Learn How It Works
-            </Button>
+              Read Our Docs
+            </a>
           </div>
         </div>
       </section>
@@ -332,24 +305,51 @@ export function LandingPage({
                 Join thousands of users who are already earning cryptocurrency
                 by watching their favorite content.
               </p>
-              <Button
-                onClick={handleWalletConnect}
-                disabled={isConnecting}
-                size="lg"
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-12 py-4 text-lg font-semibold rounded-xl shadow-xl hover:shadow-purple-500/25 transition-all duration-300"
-              >
-                {isConnecting ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    <span>Connecting Wallet...</span>
-                  </div>
-                ) : (
-                  <>
-                    <Wallet className="mr-2 h-5 w-5" />
-                    Connect Wallet & Start Earning
-                  </>
-                )}
-              </Button>
+              <ConnectButton.Custom>
+                {({ account, chain, openConnectModal, mounted }) => {
+                  return (
+                    <div
+                      {...(!mounted && {
+                        "aria-hidden": true,
+                        style: {
+                          opacity: 0,
+                          pointerEvents: "none",
+                          userSelect: "none",
+                        },
+                      })}
+                    >
+                      {(() => {
+                        if (!mounted || !account || !chain) {
+                          return (
+                            <button
+                              onClick={openConnectModal}
+                              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-xl shadow-xl hover:shadow-purple-500/25 transition-all duration-300 inline-flex items-center justify-center"
+                              type="button"
+                            >
+                              <Wallet className="mr-2 h-5 w-5 flex-shrink-0" />
+                              <span className="flex flex-col sm:flex-row sm:items-center">
+                                <span>Connect Wallet</span>
+                                <span className="sm:ml-1">& Start Earning</span>
+                              </span>
+                            </button>
+                          );
+                        }
+
+                        return (
+                          <button
+                            onClick={() => router.push("/dashboard/videos")}
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-xl shadow-xl hover:shadow-purple-500/25 transition-all duration-300 inline-flex items-center justify-center"
+                            type="button"
+                          >
+                            <Wallet className="mr-2 h-5 w-5 flex-shrink-0" />
+                            Go to Dashboard
+                          </button>
+                        );
+                      })()}
+                    </div>
+                  );
+                }}
+              </ConnectButton.Custom>
             </CardContent>
           </Card>
         </div>
@@ -385,7 +385,9 @@ export function LandingPage({
                 Support
               </a>
               <a
-                href="#"
+                href="https://owatch-1.gitbook.io/owatch-docs"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hover:text-white transition-colors font-medium"
               >
                 Documentation

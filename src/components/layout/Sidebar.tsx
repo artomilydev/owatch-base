@@ -3,7 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button, Card, Badge } from "@/components/ui";
-import { BarChart3, Play, User, Settings, Coins } from "lucide-react";
+import {
+  BarChart3,
+  Play,
+  User,
+  Settings,
+  Coins,
+  Lock,
+  ArrowRightLeft,
+} from "lucide-react";
 
 export function Sidebar(): JSX.Element {
   const pathname = usePathname();
@@ -24,8 +32,14 @@ export function Sidebar(): JSX.Element {
     {
       id: "convert",
       label: "Convert Points",
-      icon: Coins,
+      icon: ArrowRightLeft,
       href: "/dashboard/convert",
+    },
+    {
+      id: "staking",
+      label: "Staking",
+      icon: Lock,
+      href: "/dashboard/staking",
     },
     { id: "profile", label: "Profile", icon: User, href: "/dashboard/profile" },
     {

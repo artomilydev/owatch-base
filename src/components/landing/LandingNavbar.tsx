@@ -101,6 +101,19 @@ export function LandingNavbar({}: LandingNavbarProps) {
                         );
                       }
 
+                      // Chain check disabled temporarily
+                      // if (chain.unsupported) {
+                      //   return (
+                      //     <button
+                      //       onClick={openChainModal}
+                      //       className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-2 text-sm rounded-lg font-semibold transition-all shadow-lg flex items-center"
+                      //       type="button"
+                      //     >
+                      //       Wrong network
+                      //     </button>
+                      //   );
+                      // }
+
                       return (
                         <button
                           onClick={openAccountModal}
@@ -190,6 +203,19 @@ export function LandingNavbar({}: LandingNavbarProps) {
                               </button>
                             );
                           }
+
+                          // Chain check disabled temporarily
+                          // if (chain.unsupported) {
+                          //   return (
+                          //     <button
+                          //       onClick={openChainModal}
+                          //       className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white px-4 py-2 text-sm rounded-lg font-semibold transition-all shadow-lg flex items-center justify-center"
+                          //       type="button"
+                          //     >
+                          //       Wrong network
+                          //     </button>
+                          //   );
+                          // }
 
                           return (
                             <button

@@ -11,6 +11,8 @@ import {
   Menu,
   X,
   LogOut,
+  Lock,
+  ArrowRightLeft,
 } from "lucide-react";
 import { useSidebar } from "@/context/SidebarContext";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -30,7 +32,12 @@ const navigation = [
   {
     name: "Convert Points",
     href: "/dashboard/convert",
-    icon: Coins,
+    icon: ArrowRightLeft,
+  },
+  {
+    name: "Staking",
+    href: "/dashboard/staking",
+    icon: Lock,
   },
   {
     name: "Profile",

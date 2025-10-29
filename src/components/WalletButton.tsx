@@ -84,6 +84,19 @@ export function WalletButton() {
                 );
               }
 
+              // Chain check disabled temporarily
+              // if (chain.unsupported) {
+              //   return (
+              //     <button
+              //       onClick={openChainModal}
+              //       className="bg-red-600 hover:bg-red-700 text-white rounded-lg px-4 py-2 font-medium transition-colors"
+              //       type="button"
+              //     >
+              //       Wrong network
+              //     </button>
+              //   );
+              // }
+
               return (
                 <div className="flex items-center space-x-4">
                   {/* Points Display */}
